@@ -5,10 +5,12 @@ import com.example.employeeservice.dto.EmployeeDepartmentDto;
 import com.example.employeeservice.dto.EmployeeDto;
 import com.example.employeeservice.entity.Employee;
 import com.example.employeeservice.repository.EmployeeRepository;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class EmployeeService {
@@ -17,6 +19,9 @@ public class EmployeeService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private WebClient webClient;
 
     public EmployeeDto saveEmployee(EmployeeDto employeeDto)
     {
@@ -45,10 +50,16 @@ public class EmployeeService {
 
         //Call Get Department by department code service
         ResponseEntity<DepartmentDto> responseEntity =  restTemplate.getForEntity(
-                "http://DEPARTMENT-SERVICE/api/departments/" + employee.getDepartmentCode(),
-                DepartmentDto.class);
+              "http://DEPARTMENT-SERVICE/api/departments/" + employee.getDepartmentCode(),
+               DepartmentDto.class);
 
         DepartmentDto departmentDto = responseEntity.getBody();
+
+//        DepartmentDto departmentDto = webClient.get()
+//                 .uri("http://DEPARTMENT-SERVICE/api/departments/" + employee.getDepartmentCode())
+//                 .retrieve()
+//                 .bodyToMono(DepartmentDto.class)
+//                 .block();
 
         EmployeeDto employeeDto = new EmployeeDto(
                 employee.getId(),
