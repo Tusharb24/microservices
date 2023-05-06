@@ -2,6 +2,7 @@ package com.example.departmentservice.departmentservice.service;
 
 import com.example.departmentservice.departmentservice.dto.DepartmentDto;
 import com.example.departmentservice.departmentservice.entity.Department;
+import com.example.departmentservice.departmentservice.mapper.DepartmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.departmentservice.departmentservice.repository.DepartmentRepository;
@@ -12,23 +13,16 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    private DepartmentMapper departmentMapper;
+
     public DepartmentDto saveDepartment(DepartmentDto departmentDto)
     {
-        Department department = new Department(
-                departmentDto.getId(),
-                departmentDto.getDepartmentCode(),
-                departmentDto.getDepartmentName(),
-                departmentDto.getDepartmentDescription()
-        );
+        Department department = departmentMapper.departmentDtoToEntity(departmentDto);
 
         Department savedDepartment = departmentRepository.save(department);
 
-        DepartmentDto savedDepartmentDto = new DepartmentDto(
-                savedDepartment.getId(),
-                savedDepartment.getDepartmentCode(),
-                savedDepartment.getDepartmentName(),
-                savedDepartment.getDepartmentDescription()
-        );
+        DepartmentDto savedDepartmentDto = departmentMapper.departmentEntityToDto(savedDepartment);
 
         return savedDepartmentDto;
     }
@@ -37,12 +31,7 @@ public class DepartmentService {
     {
         Department department = departmentRepository.findByDepartmentCode(departmentCode);
 
-        DepartmentDto departmentDto = new DepartmentDto(
-                department.getId(),
-                department.getDepartmentCode(),
-                department.getDepartmentName(),
-                department.getDepartmentDescription()
-        );
+        DepartmentDto departmentDto = departmentMapper.departmentEntityToDto(department);
         return  departmentDto;
     }
 }

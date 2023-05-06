@@ -4,6 +4,7 @@ import com.example.employeeservice.dto.DepartmentDto;
 import com.example.employeeservice.dto.EmployeeDepartmentDto;
 import com.example.employeeservice.dto.EmployeeDto;
 import com.example.employeeservice.entity.Employee;
+import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.repository.EmployeeRepository;
 import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +24,15 @@ public class EmployeeService {
     @Autowired
     private WebClient webClient;
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
     public EmployeeDto saveEmployee(EmployeeDto employeeDto)
     {
-        Employee employee = new Employee(
-                employeeDto.getId(),
-                employeeDto.getFirstName(),
-                employeeDto.getLastName(),
-                employeeDto.getEmail(),
-                employeeDto.getDepartmentCode()
-        );
+        Employee employee = employeeMapper.employeeDtoToEmployee(employeeDto);
 
         Employee savedEmployee = employeeRepository.save(employee);
-        EmployeeDto savedEmployeeDto = new EmployeeDto(
-                savedEmployee.getId(),
-                savedEmployee.getFirstName(),
-                savedEmployee.getLastName(),
-                savedEmployee.getEmail(),
-                savedEmployee.getDepartmentCode()
-        );
+        EmployeeDto savedEmployeeDto = employeeMapper.employeeEntityToDto(savedEmployee);
 
         return savedEmployeeDto;
     }
@@ -61,13 +53,7 @@ public class EmployeeService {
 //                 .bodyToMono(DepartmentDto.class)
 //                 .block();
 
-        EmployeeDto employeeDto = new EmployeeDto(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail(),
-                employee.getDepartmentCode()
-        );
+        EmployeeDto employeeDto = employeeMapper.employeeEntityToDto(employee);
 
         EmployeeDepartmentDto employeeDepartmentDto = new EmployeeDepartmentDto(
                 employeeDto, departmentDto
