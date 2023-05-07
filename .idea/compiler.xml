@@ -10,12 +10,14 @@
         <module name="department-service" />
         <module name="service-registry" />
         <module name="employee-service" />
+        <module name="organizartion-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api-gateway" target="1.8" />
       <module name="department-service" target="1.8" />
       <module name="employee-service" target="1.8" />
+      <module name="organizartion-service" target="1.8" />
       <module name="service-registry" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -24,6 +26,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="department-service" options="-parameters" />
       <module name="employee-service" options="-parameters" />
+      <module name="organizartion-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
     </option>
   </component>
